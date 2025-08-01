@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { Slide, toast } from "react-toastify";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -12,17 +13,19 @@ const Blogs = () => {
   });
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getAllBlogs = async () => {
-      try {
-        const response = await axios.get("http://localhost:4000/getAllblog");
-        setBlogs(response?.data?.data || []);
-      } catch (error) {
-        console.error("Error fetching blogs:", error);
-      }
-    };
-    getAllBlogs();
-  }, [refresh]);
+useEffect(()=>{
+  const getAllBlog= async ()=>{
+    try {
+      const allblog= await axios.get("http://localhost:4000/getAllblog")
+      setBlogs(allblog.data.data);
+      
+    } catch (error) {
+      console.log("error from get all blog", error);
+      
+    }
+  }
+  getAllBlog()
+},[refresh]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -32,27 +35,40 @@ const Blogs = () => {
     }));
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const fromdata= new FormData();
+    fromdata.append("blogTitle", formData.blogTitle);
+    fromdata.append("blogDrescription", formData.blogDrescription);
+    fromdata.append("image", formData.image);
+    const response= await axios.post("http://localhost:4000/create-blog", fromdata)
+  
+   if(response.status==201){
+     toast.success(`🦄 Blog create succesfully!`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            transition: Slide,
+          });
+setFormData({
+        blogTitle: "",
+        blogDrescription: "",
+        image: null,
+      });
 
-    const formDataToSend = new FormData();
-    formDataToSend.append("title", formData.blogTitle);
-    formDataToSend.append("description", formData.blogDrescription);
-    formDataToSend.append("banner", formData.image);
-
-    try {
-      const response = await axios.post("http://localhost:4000/create-blog", formDataToSend);
-      if (response.status === 201) {
-        setRefresh(!refresh);
-        setFormData({ blogTitle: "", blogDrescription: "", image: null });
-      }
-    } catch (error) {
-      console.error("Error submitting blog:", error);
+      setRefresh(!refresh)
     }
-  };
+  
+  }
 
   const handleViewBtn = (id) => {
-    navigate(`/blogDetails/${id}`);
+    navigate(`/blogdetails/${id}`);
   };
 
   return (

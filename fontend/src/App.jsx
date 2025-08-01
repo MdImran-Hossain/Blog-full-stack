@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import Singup from './pages/Singup'
 import Singin from './pages/Singin'
 import Blog from './pages/Blog';
+import BlogDetails from './pages/BlogDetails';
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
       <Route path="/singup" element={<Singup />} />
       <Route path="/singin" element={<Singin />} />
       <Route path="/blog" element={<Blog />} />
+      <Route path="/blogdetails/:id" element={<BlogDetails />} />
     </Routes>
   </BrowserRouter>
   )
