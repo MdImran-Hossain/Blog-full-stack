@@ -24,22 +24,37 @@ const Signin = () => {
     }));
     setError("");
   };
-const handleSubmit= async(e)=>{
+const handleSubmit = async (e) => {
   e.preventDefault();
-  const {email,password}=loginData
- const longData={
+
+  const { email, password } = loginData;
+
+  const loginDataToSend = {
     email: email,
-    password:password
+    password: password,
+  };
 
+  try {
+    const loginResponse = await axios.post("http://localhost:4000/login", loginDataToSend);
+
+    if (loginResponse.status === 200) {
+      const user = loginResponse.data.user;
+
+      if (user && user._id) {
+        // ✅ Save user ID to localStorage
+        localStorage.setItem("userId", user._id);
+        localStorage.setItem("userName", user.name); // optional
+
+        nevigate("/"); // redirect after login
+      } else {
+        console.error("User ID missing from response.");
+      }
+    }
+  } catch (error) {
+    console.error("Login error:", error.response?.data || error.message);
   }
+};
 
-
-  const longinResponse = await axios.post("http://localhost:4000/login", longData)
-   if(longinResponse.status==200){
-    nevigate("/blog");
-   }
-console.log(longinResponse);
-}
 
   return (
     <>

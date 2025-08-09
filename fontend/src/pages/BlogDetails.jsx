@@ -53,7 +53,7 @@ const handleDaletBlog = async()=>{
             theme: "dark",
             transition: Slide,
           });
-          navigate('/blog')
+          navigate('/')
     }
   } catch (error) {
      toast.error("Failed to delete blog.");
@@ -82,7 +82,7 @@ const handleDaletBlog = async()=>{
             <button onClick={()=> handleDaletBlog(blog._id)}  className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition duration-300 cursor-pointer">
               Delete Blog
             </button>
-            <Link to={'/blog'} className="bg-yellow-500 text-white px-6 py-2 rounded-xl hover:bg-yellow-600 transition duration-300 cursor-pointer">
+            <Link to={'/'} className="bg-yellow-500 text-white px-6 py-2 rounded-xl hover:bg-yellow-600 transition duration-300 cursor-pointer">
               Go back
             </Link>
           </div>

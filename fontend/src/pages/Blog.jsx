@@ -5,6 +5,8 @@ import { Slide, toast } from "react-toastify";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
+
+  const[user, setUser]=useState()
   const [refresh, setRefresh] = useState(false);
   const [formData, setFormData] = useState({
     blogTitle: "",
@@ -27,6 +29,27 @@ useEffect(()=>{
   getAllBlog()
 },[refresh]);
 
+useEffect(() => {
+  const getUser = async () => {
+    try {
+      const id = localStorage.getItem("userId"); // ✅ Get from storage
+
+      if (!id) {
+        console.error("No user ID found. User might not be logged in.");
+        return;
+      }
+
+      const res = await axios.get(`http://localhost:4000/me/${id}`);
+      setUser(res.data.data); // adjust according to your response format
+
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+
+  getUser();
+}, []);
+ 
  const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData((prev) => ({
@@ -35,12 +58,17 @@ useEffect(()=>{
     }));
   };
   
+     
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    
     const fromdata= new FormData();
     fromdata.append("blogTitle", formData.blogTitle);
     fromdata.append("blogDrescription", formData.blogDrescription);
     fromdata.append("image", formData.image);
+    fromdata.append("userId", user._id);
+
     const response= await axios.post("http://localhost:4000/create-blog", fromdata)
   
    if(response.status==201){
